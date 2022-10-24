@@ -1,5 +1,6 @@
 import * as Location from "expo-location";
-import React, { useState } from "react";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import React, { useState, useEffect } from "react";
 import { View, Text, Button, Alert } from "react-native";
 import colors from "../../utils/colors";
 import MapPreview from "../map-preview";
@@ -7,12 +8,14 @@ import { styles } from "./styles";
 
 const LocationSelector = ({ onLocation }) => {
   const [pickedLocation, setPickedLocation] = useState(null);
-
+  const navigation = useNavigation();
+  const route = useRoute();
+  const { mapLocation } = route.params || {};
   const verifyPermissions = async () => {
     const { status } = await Location.requestForegroundPermissionsAsync();
 
     if (status !== "granted") {
-      Alert.alert("you need to grant location permissions to use this app", [{ text: "Okay" }]);
+      Alert.alert("Permiso insuficientes", "Necesitamos permisos para usar la localizacion", [{ text: "Okay" }]);
       return false;
     }
     return true;
@@ -36,12 +39,27 @@ const LocationSelector = ({ onLocation }) => {
     });
   };
 
+  const onHandlerPickMap = () => {
+    const hasPermission = verifyPermissions();
+    if (!hasPermission) return;
+    navigation.navigate("Maps");
+  };
+
+  useEffect(() => {
+    if (mapLocation) {
+      setPickedLocation(mapLocation);
+      onLocation(mapLocation);
+    }
+  }, [mapLocation]);
+
+  
   return (
     <View style={styles.container}>
       <MapPreview location={pickedLocation} style={styles.preview}>
-        <Text>No location select yet.</Text>
+        <Text>No has seleccionado ninguna ubicaion</Text>
       </MapPreview>
-      <Button title="Get Location" color={colors.secondary} onPress={onHandlerLocation} />
+      <Button title="Elegir ubicacion" color={colors.secondary} onPress={onHandlerLocation} />
+      <Button title="Pick in map" color={colors.primary} onPress={onHandlerPickMap} />
     </View>
   );
 };
