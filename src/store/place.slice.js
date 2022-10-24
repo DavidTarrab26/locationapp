@@ -28,7 +28,7 @@ export const savePlace = (title, image) => {
       }); */
       dispatch(addPlace({ title, image}));
     } catch (error) {
-      console.warn("error", error);
+      console.log("error", error);
       throw error;
     }
   };
