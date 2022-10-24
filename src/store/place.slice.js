@@ -11,13 +11,13 @@ const placeSlice = createSlice({
   initialState,
   reducers: {
     addPlace: (state, action) => {
-      const newPlace = new Place(Date.now(), action.payload.title, action.payload.image);
+      const newPlace = new Place(Date.now(), action.payload.title, action.payload.image, action.payload.address);
       state.places.push(newPlace);
     },
   },
 });
 export const {addPlace} = placeSlice.actions;
-export const savePlace = (title, image) => {
+export const savePlace = (title, image, address) => {
   return async (dispatch) => {
     /* const fileName = image.split("/").pop();
     const Path = FileSystem.documentDirectory + fileName; */
@@ -26,7 +26,7 @@ export const savePlace = (title, image) => {
         from: image,
         to: Path,
       }); */
-      dispatch(addPlace({ title, image}));
+      dispatch(addPlace({ title, image, address}));
     } catch (error) {
       console.log("error", error);
       throw error;

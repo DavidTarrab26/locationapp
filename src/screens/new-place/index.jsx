@@ -17,7 +17,7 @@ const NewPlace = ({ navigation }) => {
   };
 
   const onHandleSubmit = () => {
-    dispatch(savePlace(title, image));
+    dispatch(savePlace(title, image, "Azcuenaga 567"));
     navigation.navigate("Places");
   };
 
